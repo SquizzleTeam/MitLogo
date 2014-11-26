@@ -1,0 +1,6 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" >
+    <item android:id="@+id/spielen" android:title="@string/spielen"         app:showAsAction="always"/>
+    <item android:id="@+id/neuefrage" android:title="@string/neuefrage"         app:showAsAction="always"/>
+    <item android:id="@+id/themaloeschen" android:title="@string/themaloeschen"         app:showAsAction="never"/>
+</menu>

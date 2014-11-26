@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">SQUIZZLE</string>
+    <string name="neuesthema">Neues Thema</string>
+    <string name="wieSollThemaHeissen">Wie soll das neue Thema heissen?</string>
+    <string name="speichern">Speichern</string>
+    <string name="themaloeschen">Thema Löschen</string>
+    <string name="neuefrage">Neue Frage</string>
+    <string name="fragestellung">Wie lautet ihre Frage?</string>
+    <string name="korrektAnt">Wie lautet die korrekte Antwort?</string>
+    <string name="weiter">Weiter</string>
+    <string name="neuemp">* Neu</string>
+    <string name="loeschen">Löschen</string>
+    <string name="richtig">Richtig</string>
+    <string name="hinzufuegen">Hinzufügen</string>
+    <string name="schreiben">Schreiben</string>
+    <string name="multiplechoice">Multiple Choice</string>
+    <string name="abcd">A, B, C, D</string>
+    <string name="wahr">Wahr / Falsch</string>
+    <string name="antwort">Wie lautet eine Antwort?</string>
+    <string name="a">A</string>
+    <string name="b">B</string>
+    <string name="c">C</string>
+    <string name="d">D</string>
+    <string name="typWahr">Wahr</string>
+    <string name="typfalsch">Falsch</string>
+    <string name="spielen">Spielen</string>
+    <string name="ueberpruefen">Überprüfen</string>
+    <string name="neubeginnen">Neu Beginnen</string>
+
+</resources>

@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="ch.bbbaden.quizme"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="14"
+        android:targetSdkVersion="21" />
+        <uses-permission android:name="android.permission.INTERNET"/>
+    
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/logo_squizzle"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name=".Welcome"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Black.NoTitleBar" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+ 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        
+        <activity
+            android:name=".Starter"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="ch.bbbaden.quizme.STARTER" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".Neues_Thema"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="ch.bbbaden.quizme.NEUESTHEMA" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".Fragen_eines_Themas"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="ch.bbbaden.quizme.FRAGEN_EINES_THEMAS" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".Neue_Frage_Typen_Auswahl"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="ch.bbbaden.quizme.NEUE_FRAGE_TYPEN_AUSWAHL" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".Neue_Frage_Typ_ABCD"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="ch.bbbaden.quizme.NEUE_FRAGE_TYP_ABCD" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".Neue_Frage_Typ_MultipleChoice"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="ch.bbbaden.quizme.NEUE_FRAGE_TYP_MULTIPLECHOICE" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".Neue_Frage_Typ_Schreiben"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="ch.bbbaden.quizme.NEUE_FRAGE_TYP_SCHREIBEN" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".Neue_Frage_Typ_WahrFalsch"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="ch.bbbaden.quizme.NEUE_FRAGE_TYP_WAHRFALSCH" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".Neue_Frage_Typ_MultipleChoice2"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="ch.bbbaden.quizme.NEUE_FRAGE_TYP_MULTIPLECHOICE2" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".Spielen_Aus_Thema"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="ch.bbbaden.quizme.SPIELEN_AUS_THEMA" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".Spielen_Aus_Thema_Schreiben"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="ch.bbbaden.quizme.SPIELEN_AUS_THEMA_SCHREIBEN" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+            <activity
+            android:name=".Spielen_Aus_Thema_Wahrfalsch"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="ch.bbbaden.quizme.SPIELEN_AUS_THEMA_WAHRFALSCH" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+                    <activity
+            android:name=".Spielen_Aus_Thema_ABCD"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="ch.bbbaden.quizme.SPIELEN_AUS_THEMA_ABCD" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+            <activity
+            android:name=".Spielen_Aus_Thema_Mulitplechoice"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="ch.bbbaden.quizme.SPIELEN_AUS_THEMA_MULTIPLECHOICE" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>
