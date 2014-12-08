@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.widget.Toast;
 
 public class Spielen_Aus_Thema extends ActionBarActivity{
 	private Intent starter;

@@ -1,7 +1,6 @@
 package ch.bbbaden.quizme;
 
 import java.util.ArrayList;
-import org.json.JSONArray;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -27,8 +26,7 @@ public class Starter extends ActionBarActivity {
 	private SQLiteDatabase sqLiteDatabase;
 	private TableLayout table;
 	private Intent frage;
-	private Intent neues_thema, starter;
-	private String url;
+	private Intent neues_thema, starter, online_themen;
 	private Context context = this;
 
 	@Override
@@ -61,6 +59,8 @@ public class Starter extends ActionBarActivity {
 		starter = new Intent("ch.bbbaden.quizme.STARTER");
 		starter.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
 		starter.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+		
+		online_themen = new Intent("ch.bbbaden.quizme.ONLINETHEMEN");
 	}
 
 	public void openNeuesThema(View view) {
@@ -136,6 +136,15 @@ public class Starter extends ActionBarActivity {
 
 								}
 							});
+					dialog.setNeutralButton("Teilen", new DialogInterface.OnClickListener() {
+						
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							new OnlineConnector().execute(Thema.getText().toString());
+							Toast.makeText(context, "Das Thema wurde erfolgreich geuploadet.", Toast.LENGTH_LONG).show();
+						}
+					});
+					
 					dialog.setNegativeButton("Bearbeiten",
 							new DialogInterface.OnClickListener() {
 
@@ -155,27 +164,6 @@ public class Starter extends ActionBarActivity {
 								}
 
 							});
-					dialog.setNeutralButton("Teilen",
-							new DialogInterface.OnClickListener() {
-
-								@Override
-								public void onClick(DialogInterface dialog,
-										int which) {
-									String them = Thema.getText().toString();
-									them = them.replace(" ", "+");
-									url = "http://192.168.4.106/Squizzle/inputThema.php?thema="
-											+ them;
-									System.out.println(url);
-									new GetAllCustomerTask()
-		
-											.execute(new ApiConnector());
-
-									Toast.makeText(context,
-											"Das Thema wurde eingefügt.",
-											Toast.LENGTH_LONG).show();
-
-								}
-							});
 
 					dialog.show();
 
@@ -187,12 +175,16 @@ public class Starter extends ActionBarActivity {
 		}
 	}
 
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.neuesthema:
 			neues_thema.putExtra("bearbeiten", false);
 			startActivity(neues_thema);
+			break;
+		case R.id.Online:
+			startActivity(online_themen);
 			break;
 		}
 
@@ -209,18 +201,18 @@ public class Starter extends ActionBarActivity {
 	public void onPause() {
 		super.onPause();
 	}
-
-	private class GetAllCustomerTask extends
-			AsyncTask<ApiConnector, Long, JSONArray> {
-
-		@Override
-		protected JSONArray doInBackground(ApiConnector... params) {
-			return params[0].setNewThema(url);
-		}
+	
+	
+	private class OnlineConnector extends AsyncTask<String, Void, Void>{
 
 		@Override
-		protected void onPostExecute(JSONArray jsonArray) {
-
+		protected Void doInBackground(String... params) {
+			OnlineMode on = new OnlineMode(context);
+			on.setDatabase();
+			on.getJSON(params[0]);
+			on.inputThema();
+			return null;
 		}
+		
 	}
 }

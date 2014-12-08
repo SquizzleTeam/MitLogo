@@ -2,6 +2,10 @@ package ch.bbbaden.quizme;
 
 import java.util.ArrayList;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -23,7 +27,7 @@ public class DBZugriff extends SQLiteOpenHelper {
 			+ " (id INTEGER PRIMARY KEY AUTOINCREMENT, Typ VARCHAR(50))";
 	private static String CREATE_FRAGEN = "CREATE TABLE "
 			+ FRAGEN_TABLE
-			+ " (id INTEGER PRIMARY KEY AUTOINCREMENT, FID_Typ INTEGER, FID_Thema INTEGER, Frage VARCHAR(255), Gekonnt VARCHAR(20) , FOREIGN KEY (FID_Typ) REFERENCES "
+			+ " (id INTEGER PRIMARY KEY AUTOINCREMENT, FID_Typ INTEGER, FID_Thema INTEGER, Frage VARCHAR(255), Gekonnt VARCHAR(20) , Geuploadet INTEGER(3), FOREIGN KEY (FID_Typ) REFERENCES "
 			+ TYPEN_TABLE + " (id), FOREIGN KEY (FID_Thema) REFERENCES "
 			+ THEMEN_TABLE + " (id));";
 	private static String CREATE_ANTWORTEN = "CREATE TABLE "
@@ -156,6 +160,7 @@ public class DBZugriff extends SQLiteOpenHelper {
 		daten.put("FID_Thema", themenID);
 		daten.put("Frage", frage);
 		daten.put("Gekonnt", gekonnt);
+		daten.put("Geuploadet", 0);
 
 		long frageID = db.insert(FRAGEN_TABLE, null, daten);
 
@@ -189,7 +194,7 @@ public class DBZugriff extends SQLiteOpenHelper {
 
 	public ArrayList<Integer> getAllFragenIDIntTABLE_FRAGEbyThema(
 			SQLiteDatabase db, int themenID) {
-		String[] columns = { "id", "FID_Typ", "FID_Thema", "Frage" , "Gekonnt" };
+		String[] columns = { "id", "FID_Typ", "FID_Thema", "Frage", "Gekonnt" };
 		Cursor cursor = db.query(FRAGEN_TABLE, columns, "FID_Thema = '"
 				+ themenID + "'", null, null, null, null);
 		ArrayList<Integer> fragelist = new ArrayList<Integer>();
@@ -201,10 +206,10 @@ public class DBZugriff extends SQLiteOpenHelper {
 
 		return fragelist;
 	}
-	
+
 	public ArrayList<Integer> getAllFragenIDIntTABLE_FRAGEbyThemaANDGekonnt(
 			SQLiteDatabase db, int themenID) {
-		String[] columns = { "id", "FID_Typ", "FID_Thema", "Frage" , "Gekonnt" };
+		String[] columns = { "id", "FID_Typ", "FID_Thema", "Frage", "Gekonnt" };
 		Cursor cursor = db.query(FRAGEN_TABLE, columns, "FID_Thema = '"
 				+ themenID + "' AND Gekonnt = 0", null, null, null, null);
 		ArrayList<Integer> fragelist = new ArrayList<Integer>();
@@ -219,7 +224,7 @@ public class DBZugriff extends SQLiteOpenHelper {
 
 	public ArrayList<Integer> getAllFID_TypInFRAGEN_TABLE(SQLiteDatabase db,
 			int themenID) {
-		String[] columns = { "id", "FID_Typ", "FID_Thema", "Frage" , "Gekonnt"};
+		String[] columns = { "id", "FID_Typ", "FID_Thema", "Frage", "Gekonnt" };
 		Cursor cursor = db.query(FRAGEN_TABLE, columns, "FID_Thema = '"
 				+ themenID + "'", null, null, null, null);
 		ArrayList<Integer> typenlist = new ArrayList<Integer>();
@@ -233,7 +238,7 @@ public class DBZugriff extends SQLiteOpenHelper {
 	}
 
 	public String getFrageByFrageID(SQLiteDatabase db, int fragenID) {
-		String[] columns = { "id", "FID_Typ", "FID_Thema", "Frage" , "Gekonnt"};
+		String[] columns = { "id", "FID_Typ", "FID_Thema", "Frage", "Gekonnt" };
 		Cursor cursor = db.query(FRAGEN_TABLE, columns, "id = '" + fragenID
 				+ "'", null, null, null, null);
 		String frage = null;
@@ -245,7 +250,7 @@ public class DBZugriff extends SQLiteOpenHelper {
 	}
 
 	public int getFID_TypByFrageID(SQLiteDatabase db, int fragenID) {
-		String[] columns = { "id", "FID_Typ", "FID_Thema", "Frage" , "Gekonnt" };
+		String[] columns = { "id", "FID_Typ", "FID_Thema", "Frage", "Gekonnt" };
 		Cursor cursor = db.query(FRAGEN_TABLE, columns, "id = '" + fragenID
 				+ "'", null, null, null, null);
 		int FID_Typ = 0;
@@ -264,7 +269,8 @@ public class DBZugriff extends SQLiteOpenHelper {
 			cursor = db.query(ANTWORTEN_TABLE, columns, "FID_Frage = '"
 					+ fragenID + "' AND Korrekt ='1'", null, null, null, null);
 		} else {
-			cursor = db.query(ANTWORTEN_TABLE, columns, "FID_Frage = '"+fragenID +"'", null, null, null, null);
+			cursor = db.query(ANTWORTEN_TABLE, columns, "FID_Frage = '"
+					+ fragenID + "'", null, null, null, null);
 		}
 		ArrayList<String> antwortenList = new ArrayList<String>();
 
@@ -275,11 +281,13 @@ public class DBZugriff extends SQLiteOpenHelper {
 
 		return antwortenList;
 	}
-	
-	public ArrayList<String> getKorrektheitByFID_Fragen(SQLiteDatabase db, int fragenID){
+
+	public ArrayList<String> getKorrektheitByFID_Fragen(SQLiteDatabase db,
+			int fragenID) {
 		String[] columns = { "id", "FID_Frage", "Antwort", "Korrekt" };
 		Cursor cursor;
-			cursor = db.query(ANTWORTEN_TABLE, columns, "FID_Frage = '"+fragenID +"'", null, null, null, null);
+		cursor = db.query(ANTWORTEN_TABLE, columns, "FID_Frage = '" + fragenID
+				+ "'", null, null, null, null);
 		ArrayList<String> antwortenList = new ArrayList<>();
 
 		while (cursor.moveToNext()) {
@@ -289,62 +297,124 @@ public class DBZugriff extends SQLiteOpenHelper {
 
 		return antwortenList;
 	}
-	
-	public void updateFrageZuGekonnt(SQLiteDatabase db, int fragenID){
-		String sql = "UPDATE " + FRAGEN_TABLE + " SET Gekonnt = 1 WHERE id = '" + fragenID+"'";
-		db.execSQL(sql);
-	}
-	
-	public long updateFrage(SQLiteDatabase db, int themenID, int typenID, String frage, int gekonnt, int fragenID){
-		db.execSQL("DELETE FROM " + FRAGEN_TABLE + " WHERE id = '"
-				+ fragenID + "'");
-		
-			ContentValues daten = new ContentValues();
-			daten.put("FID_Typ", typenID);
-			daten.put("FID_Thema", themenID);
-			daten.put("Frage", frage);
-			daten.put("Gekonnt", gekonnt);
 
-			long frageID = db.insert(FRAGEN_TABLE, null, daten);
+	public void updateFrageZuGekonnt(SQLiteDatabase db, int fragenID) {
+		String sql = "UPDATE " + FRAGEN_TABLE + " SET Gekonnt = 1 WHERE id = '"
+				+ fragenID + "'";
+		db.execSQL(sql);
+	}
 
-			return frageID;
+	public long updateFrage(SQLiteDatabase db, int themenID, int typenID,
+			String frage, int gekonnt, int fragenID) {
+		db.execSQL("DELETE FROM " + FRAGEN_TABLE + " WHERE id = '" + fragenID
+				+ "'");
+
+		ContentValues daten = new ContentValues();
+		daten.put("FID_Typ", typenID);
+		daten.put("FID_Thema", themenID);
+		daten.put("Frage", frage);
+		daten.put("Gekonnt", gekonnt);
+		daten.put("Geuploadet", 0);
+
+		long frageID = db.insert(FRAGEN_TABLE, null, daten);
+
+		return frageID;
 	}
-	
-	public void setAllKorrektToFalse(SQLiteDatabase db, int themenID){
-		String sql = "UPDATE " + FRAGEN_TABLE + " SET Gekonnt = 0 WHERE FID_Thema = '" + themenID+"'";
+
+	public void setAllKorrektToFalse(SQLiteDatabase db, int themenID) {
+		String sql = "UPDATE " + FRAGEN_TABLE
+				+ " SET Gekonnt = 0 WHERE FID_Thema = '" + themenID + "'";
 		db.execSQL(sql);
 	}
-	
-	public void deleteFrage(SQLiteDatabase db, int fragenID){
-		String sql= "DELETE FROM " + FRAGEN_TABLE + " WHERE id = '" + fragenID+"'";
+
+	public void deleteFrage(SQLiteDatabase db, int fragenID) {
+		String sql = "DELETE FROM " + FRAGEN_TABLE + " WHERE id = '" + fragenID
+				+ "'";
 		db.execSQL(sql);
-		String sql2 = "DELETE FROM " + ANTWORTEN_TABLE +" WHERE FID_Frage = '" +fragenID + "'";
+		String sql2 = "DELETE FROM " + ANTWORTEN_TABLE + " WHERE FID_Frage = '"
+				+ fragenID + "'";
 		db.execSQL(sql2);
 	}
-	
-	public void updateThema(SQLiteDatabase db, String themenName, String neuesThema){
-		String sql = "UPDATE " + THEMEN_TABLE + " SET Thema='"+ neuesThema +"' WHERE Thema = '" + themenName+"'";
+
+	public void updateThema(SQLiteDatabase db, String themenName,
+			String neuesThema) {
+		String sql = "UPDATE " + THEMEN_TABLE + " SET Thema='" + neuesThema
+				+ "' WHERE Thema = '" + themenName + "'";
 		db.execSQL(sql);
 	}
-	
-	public void updateAntwort(SQLiteDatabase db, int FID_Frage, String antwort, int korrekt){
-		String del = "DELETE FROM " + ANTWORTEN_TABLE + " WHERE FID_Frage = '" + FID_Frage + "'";
+
+	public void updateAntwort(SQLiteDatabase db, int FID_Frage, String antwort,
+			int korrekt) {
+		String del = "DELETE FROM " + ANTWORTEN_TABLE + " WHERE FID_Frage = '"
+				+ FID_Frage + "'";
 		db.execSQL(del);
-		
+
 		ContentValues daten = new ContentValues();
 		daten.put("FID_Frage", FID_Frage);
 		daten.put("Antwort", antwort);
 		daten.put("Korrekt", korrekt);
-		
+
 		db.insert(ANTWORTEN_TABLE, null, daten);
 
 	}
-	
+
+	public JSONArray getAllFragenByThemenID(SQLiteDatabase db, int themenID) {
+		String[] columns = { "id","FID_Typ", "Frage" };
+		JSONArray jsonArray = new JSONArray();
+
+		Cursor cursor = db.query(FRAGEN_TABLE, columns, "FID_Thema = '"
+				+ themenID + "' AND Geuploadet = '0'", null, null, null, null);
+		while (cursor.moveToNext()) {
+			JSONObject ob = new JSONObject();
+			try {
+				ob.put("ID", cursor.getString(0));
+				ob.put("FID_Typ", cursor.getString(1));
+				ob.put("Frage", cursor.getString(2));
+				jsonArray.put(ob);
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return jsonArray;
+	}
+
+	public JSONArray getAllAntwortenJSONbyFID_Frage(SQLiteDatabase db,
+			ArrayList<Integer> fid_frage) {
+		JSONArray antworten = new JSONArray();
+		String[] columns = { "FID_Frage", "Antwort", "Korrekt" };
+
+		for (int i = 0; i < fid_frage.size(); i++) {
+				Cursor cursor = db.query(ANTWORTEN_TABLE, columns,
+						"FID_Frage = '" + fid_frage.get(i) + "'", null, null,
+						null, null);
+				while (cursor.moveToNext()) {
+					JSONObject ant = new JSONObject();
+					try {
+						ant.put("Antwort", cursor.getString(1));
+						ant.put("Korrekt", cursor.getString(2));
+						ant.put("FragenID", cursor.getString(0));
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+					antworten.put(ant);
+				}
+			}
+		
+		return antworten;
+	}
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		// TODO Auto-generated method stub
 
 	}
+
+	public void setGeuploadetByThema(SQLiteDatabase db,
+			String themenID) {
+		String sql = "UPDATE " + FRAGEN_TABLE + " SET Geuploadet='1' WHERE FID_Thema = '" + themenID + "'";
+		db.execSQL(sql);
+	}
+	
 
 }

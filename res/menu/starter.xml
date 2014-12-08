@@ -5,5 +5,9 @@
         android:id="@+id/neuesthema"
         app:showAsAction="always"
         android:title="Neues Thema"/>
+    <item 
+        android:id="@+id/Online"
+        app:showAsAction="ifRoom"
+        android:title="Online Themen"/>
 
 </menu>
